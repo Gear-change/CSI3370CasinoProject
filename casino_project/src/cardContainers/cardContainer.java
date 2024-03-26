@@ -1,7 +1,9 @@
+package cardContainers;
 import java.util.ArrayList;
+import deckCards.Deck;
 import java.util.LinkedList;
 import java.util.Random;
-
+import cards.*;
 public class cardContainer {
     public LinkedList<card> theContainer = new LinkedList<card>();
     public ArrayList<Boolean> cardsVisable = new ArrayList<Boolean>();
@@ -16,6 +18,10 @@ public class cardContainer {
             cardsVisable.add(!faceDown);
         }
     }
+    public card getCardFromIndex(int index) {
+		return theContainer.get(index);
+    	
+    }
 
     public card drawFromContainer() {
         cardsVisable.removeFirst();
@@ -26,13 +32,15 @@ public class cardContainer {
         if (cardsVisable.get(cardlocation)) {
             return theContainer.get(cardlocation);
         } else {
-            return card();
+        	card thisCard = new card();
+            return thisCard;
         }
     }
 
-    private card card() {
-		return card();
-	}
+    public void clearContainer() {
+    	theContainer.clear();
+    	cardsVisable.clear();
+    }
 
 	public void addCardToContainer(card toAdd, boolean IsVisable) {
         theContainer.add(toAdd);
@@ -53,5 +61,14 @@ public class cardContainer {
 
     public int getCardValAt(int index) {
         return theContainer.get(index).getCardValNum();
+    }
+    public void addCardsFromContainer(cardContainer toAdd, boolean facedown) {
+    	LinkedList<card> tempLL = toAdd.getCards();
+    	Random rand = new Random();
+        while(!tempLL.isEmpty()) {
+            theContainer.add((card) tempLL.remove(rand.nextInt(tempLL.size())));
+            cardsVisable.add(!facedown);
+        }
+        return;
     }
 }

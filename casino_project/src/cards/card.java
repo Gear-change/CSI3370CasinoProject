@@ -1,3 +1,4 @@
+package cards;
 public class card extends suit {
     public int cardValNum;
     public String cardValNameString;
@@ -16,7 +17,7 @@ public class card extends suit {
         suitName = "BackOfCard";
     }
 
-    public int getCardValNum() {
+	public int getCardValNum() {
         return cardValNum;
     }
 
@@ -33,7 +34,6 @@ public class card extends suit {
     }
 
 	public Integer getCardValNum1() {
-		// TODO Auto-generated method stub
         return cardValNum;
 	}
 

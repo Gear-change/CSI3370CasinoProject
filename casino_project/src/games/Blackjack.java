@@ -1,5 +1,9 @@
+package games;
 import java.util.ArrayList;
 import java.util.LinkedList;
+import cards.*;
+import cardContainers.cardContainer;
+import deckCards.Deck;
 public class Blackjack<cardcontainer> {
     public Boolean gameEnded;
     public Deck thisDeck;
@@ -11,6 +15,7 @@ public class Blackjack<cardcontainer> {
     private ArrayList<String> cardNameList = new ArrayList<String>();
     private ArrayList<Integer> cardVaList = new ArrayList<Integer>();
     private ArrayList<String> cardSuitsNameList = new ArrayList<String>();
+    public Integer insurance;
 
     /**
 	 * 
@@ -36,41 +41,45 @@ public class Blackjack<cardcontainer> {
         for(String thisString : cardSuitsNames) {
         	cardSuitsNameList.add(thisString);
         }
-        thisDeck = Deck(deckNum, cardNameList, cardVaList, cardSuitsNameList) ;
+        thisDeck = new Deck(deckNum, cardNameList, cardVaList, cardSuitsNameList) ;
         // then we set the games state
         gameEnded = false;
         // then we make a shuffled deck
         toDeal = new cardContainer(thisDeck, true);
         stateOfPlay = "Start";
+        dealerHand = new cardContainer();
+        playerHand = new cardContainer();
+        discard = new cardContainer();
 	}
 
-    private Deck Deck(int deckNum, ArrayList<String> cardNameList2, ArrayList<Integer> cardVaList2,
-			ArrayList<String> cardSuitsNameList2) {
-		return Deck(deckNum, cardNameList, cardVaList, cardSuitsNameList);
-	}
-
+    
+    public String getState() {
+    	return stateOfPlay;
+    }
 	public Boolean gamePlayingBoolian() {
         return !gameEnded;
     }
 	public void DiscardAll() {
 		LinkedList<card> cards1 = playerHand.getCards();
-		LinkedList<card> cards2 = playerHand.getCards();
-		LinkedList<card> cards3 = playerHand.getCards();
+		LinkedList<card> cards2 = dealerHand.getCards();
 		cards1.addAll(cards2);
-		cards1.addAll(cards3);
 		for(card tempCard : cards1) {
 			discard.addCardToContainer(tempCard, false);
 		}
-		
+		playerHand.clearContainer();
+		dealerHand.clearContainer();
+		stateOfPlay = "Start";
 		}
-    public void firstTurnDeal() {
+
+	public void firstTurnDeal() {
         if (toDeal.getContainerSize() > 4) {
             playerHand.addCardToContainer(toDeal.drawFromContainer(), true);
             dealerHand.addCardToContainer(toDeal.drawFromContainer(), true);
             playerHand.addCardToContainer(toDeal.drawFromContainer(), true);
             dealerHand.addCardToContainer(toDeal.drawFromContainer(), false);
         } else {
-            toDeal = new cardContainer(thisDeck, true);
+        	toDeal.addCardsFromContainer(discard, true);
+        	discard.clearContainer();
             playerHand.addCardToContainer(toDeal.drawFromContainer(), true);
             dealerHand.addCardToContainer(toDeal.drawFromContainer(), true);
             playerHand.addCardToContainer(toDeal.drawFromContainer(), true);
@@ -81,8 +90,8 @@ public class Blackjack<cardcontainer> {
         int dealerKnownCard = dealerHand.getCardValAt(0);
 
         // check for insurance/ dealer pocket blackjack and no player blackjack
-        if (dealerKnownCard == 1 && playerHandInit != 21) {
-            stateOfPlay = "Insurance";
+        if (dealerKnownCard == 1 && playerHandInit != 21 && resultInt == 21) {
+            stateOfPlay = "Dealer Win1";
             return;
         } else {
             // continue game as usual
@@ -92,13 +101,17 @@ public class Blackjack<cardcontainer> {
 
     public void hitMe() {
         if (toDeal.getContainerSize() > 1) {
+        	playerHand.addCardToContainer(toDeal.drawFromContainer(), true);
         } else {
-            toDeal = new cardContainer(thisDeck, true);
+        	toDeal.addCardsFromContainer(discard, true);
+        	discard.clearContainer();
+        	playerHand.addCardToContainer(toDeal.drawFromContainer(), true);
         }
         int playerTotal = this.checkPlayerHand();
         if (playerTotal > 21) {
             // player has busted
             stateOfPlay = "busted";
+            gameEnded = true;
         } else {
             stateOfPlay = "Play";
         }
@@ -117,22 +130,47 @@ public class Blackjack<cardcontainer> {
         }
         toReturn.concat("The dealer's hand contains: ");
         for (card thiscard : currentDealCardList) {
-            toReturn.concat(thiscard.getCardFullString() + " ");
+            toReturn = toReturn.concat(thiscard.getCardFullString()).concat(" ");
         }
         ArrayList<card> currentPlayerCardList = new ArrayList<card>();
         for (int i = 0; i < playerHand.getContainerSize(); i++) {
             currentPlayerCardList.add(playerHand.checkCardIfVisable(i));
         }
-        toReturn.concat("./n Your hand contains: ");
+        toReturn = toReturn.concat("./n Your hand contains: ");
         for (card thiscard : currentPlayerCardList) {
-            toReturn.concat(thiscard.getCardFullString() + " ");
+        	toReturn = toReturn.concat(thiscard.getCardFullString() + " ");
         }
-        toReturn.concat(".");
+        toReturn = toReturn.concat(".");
         return toReturn;
     }
-
+ public void setState(String toSet) {
+	 stateOfPlay = toSet;
+	 return;
+ }
+    
     public void dealerTurn() {
         //TODO: this is where the dealer turn is resolved
+    	//printout for the dealers initial hand
+    	card temp5 = dealerHand.getCardFromIndex(1);
+    	System.out.println("the dealer flips his card, revealing a " + temp5.getCardValNameString());
+    	while(this.checkDealerHand() < 17) {
+    		dealerHand.addCardToContainer(toDeal.drawFromContainer(), true);
+    	}
+    	if(this.checkDealerHand() > 21) {
+    		stateOfPlay = "Dealer Busted";
+    	} else {
+    		if (this.checkDealerHand() > this.checkPlayerHand()) {
+    			stateOfPlay = "Dealer Win2";
+    			gameEnded = true;
+    		}
+    		if (this.checkDealerHand() < this.checkPlayerHand()) {
+    			stateOfPlay = "Player Win";
+    			gameEnded = true;
+    		}
+    		if (this.checkDealerHand() == this.checkPlayerHand()) {
+    			stateOfPlay = "Stand-Off";
+    		}
+    	}
     }
 
     private int checkDealerHand() {
