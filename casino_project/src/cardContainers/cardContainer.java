@@ -22,6 +22,9 @@ public class cardContainer {
 		return theContainer.get(index);
     	
     }
+    public void setVisability(int index, boolean toSet) {
+    	cardsVisable.set(index, toSet);
+    }
 
     public card drawFromContainer() {
         cardsVisable.removeFirst();

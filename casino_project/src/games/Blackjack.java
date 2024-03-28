@@ -92,6 +92,8 @@ public class Blackjack<cardcontainer> {
         // check for insurance/ dealer pocket blackjack and no player blackjack
         if (dealerKnownCard == 1 && playerHandInit != 21 && resultInt == 21) {
             stateOfPlay = "Dealer Win1";
+            gameEnded = true;
+            this.DiscardAll();
             return;
         } else {
             // continue game as usual
@@ -111,6 +113,7 @@ public class Blackjack<cardcontainer> {
         if (playerTotal > 21) {
             // player has busted
             stateOfPlay = "busted";
+            System.out.println("you went bust.");
             gameEnded = true;
         } else {
             stateOfPlay = "Play";
@@ -128,7 +131,7 @@ public class Blackjack<cardcontainer> {
         for (int i = 0; i < dealerHand.getContainerSize(); i++) {
             currentDealCardList.add(dealerHand.checkCardIfVisable(i));
         }
-        toReturn.concat("The dealer's hand contains: ");
+        toReturn = toReturn.concat("The dealer's hand contains: ");
         for (card thiscard : currentDealCardList) {
             toReturn = toReturn.concat(thiscard.getCardFullString()).concat(" ");
         }
@@ -147,30 +150,41 @@ public class Blackjack<cardcontainer> {
 	 stateOfPlay = toSet;
 	 return;
  }
+ public card dealerTurn2() {
+	 if (this.checkDealerHand() < 17) {
+		 card tempCard = toDeal.drawFromContainer();
+		 
+		 dealerHand.addCardToContainer(tempCard, true);
+		 return tempCard;
+	 } else {
+		 card tempCard = new card();
+		 if(this.checkDealerHand() > 21) {
+	    		stateOfPlay = "Dealer Busted";
+	    		gameEnded = true;
+	    	} else {
+	    		if (this.checkDealerHand() > this.checkPlayerHand()) {
+	    			stateOfPlay = "Dealer Win2";
+	    			gameEnded = true;
+	    		}
+	    		if (this.checkDealerHand() < this.checkPlayerHand()) {
+	    			stateOfPlay = "Player Win";
+	    			gameEnded = true;
+	    		}
+	    		if (this.checkDealerHand() == this.checkPlayerHand()) {
+	    			stateOfPlay = "Stand-Off";
+	    		}
+	    	}
+		 return tempCard;
+	 }
+ }
     
     public void dealerTurn() {
         //TODO: this is where the dealer turn is resolved
     	//printout for the dealers initial hand
     	card temp5 = dealerHand.getCardFromIndex(1);
     	System.out.println("the dealer flips his card, revealing a " + temp5.getCardValNameString());
-    	while(this.checkDealerHand() < 17) {
-    		dealerHand.addCardToContainer(toDeal.drawFromContainer(), true);
-    	}
-    	if(this.checkDealerHand() > 21) {
-    		stateOfPlay = "Dealer Busted";
-    	} else {
-    		if (this.checkDealerHand() > this.checkPlayerHand()) {
-    			stateOfPlay = "Dealer Win2";
-    			gameEnded = true;
-    		}
-    		if (this.checkDealerHand() < this.checkPlayerHand()) {
-    			stateOfPlay = "Player Win";
-    			gameEnded = true;
-    		}
-    		if (this.checkDealerHand() == this.checkPlayerHand()) {
-    			stateOfPlay = "Stand-Off";
-    		}
-    	}
+    	dealerHand.setVisability(1, true);
+    	stateOfPlay = "dealerTurn2";
     }
 
     private int checkDealerHand() {
@@ -190,7 +204,7 @@ public class Blackjack<cardcontainer> {
         // check for aces if the new total is not above 11
         if (totalDealerHand <= 12) {
             for (Integer integerVal : dealerHandValList) {
-                if (integerVal == 1) {
+                if (integerVal == 1 && totalDealerHand < 12) {
                     totalDealerHand = totalDealerHand + 10;
                 }
             }
@@ -213,9 +227,9 @@ public class Blackjack<cardcontainer> {
             totalPlayerHand = totalPlayerHand + integer;
         }
         // check for aces if the new total is not above 11
-        if (totalPlayerHand <= 12) {
+        if (totalPlayerHand < 12) {
             for (Integer integerVal : playerHandValList) {
-                if (integerVal == 1) {
+                if (integerVal == 1 && totalPlayerHand < 12) {
                     totalPlayerHand = totalPlayerHand + 10;
                 }
             }
