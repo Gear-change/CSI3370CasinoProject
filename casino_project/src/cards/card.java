@@ -11,6 +11,7 @@ public class card extends suit {
     }
 
     public card() {
+    	//this is for facedown cards
         cardValNameString = "none";
         cardValNum = 0;
         suitID = 0;
@@ -18,14 +19,17 @@ public class card extends suit {
     }
 
 	public int getCardValNum() {
+		//this is the cards number for face cards, jack = 11, queen 12, and king is 13
         return cardValNum;
     }
 
     public String getCardValNameString() {
+    	//this is for the name for that value
         return cardValNameString;
     }
 
     public String getCardFullString() {
+    	//this is to get it as a string, mainly for text deployment
         if (cardValNum != 0) {
             return (cardValNameString + " of " + suitName);
         } else {
@@ -34,6 +38,7 @@ public class card extends suit {
     }
 
 	public Integer getCardValNum1() {
+		//this is an alternate for Integer instead of int
         return cardValNum;
 	}
 

@@ -10,7 +10,8 @@ public class Deck {
     public ArrayList<card> cardsInDeck = new ArrayList<card>();
 
     public Deck(int deckNum, List<String> cardNameList, ArrayList<Integer> cardVaList, ArrayList<String> cardSuitsNameList) {
-        for (int i = 0; i < deckNum; i++) {
+        //this is for creating a deck based on the inputs above
+    	for (int i = 0; i < deckNum; i++) {
             int tempnum2 = 1;
             for (String tempSuit : cardSuitsNameList) {
                 int tempNum = 1;
@@ -27,6 +28,7 @@ public class Deck {
 
 
 	public LinkedList<card> GetDeckList() {
+		//this gets us a linked list of cards.
         LinkedList<card> tempLL = new LinkedList<card>();
         tempLL.addAll(cardsInDeck);
         return tempLL;

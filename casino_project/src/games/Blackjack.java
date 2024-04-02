@@ -54,12 +54,15 @@ public class Blackjack<cardcontainer> {
 
     
     public String getState() {
+    	//this returns what state we are in
     	return stateOfPlay;
     }
 	public Boolean gamePlayingBoolian() {
+		//this is a additional way to keep track of the game
         return !gameEnded;
     }
 	public void DiscardAll() {
+		//for the end of round resets
 		LinkedList<card> cards1 = playerHand.getCards();
 		LinkedList<card> cards2 = dealerHand.getCards();
 		cards1.addAll(cards2);
@@ -72,6 +75,7 @@ public class Blackjack<cardcontainer> {
 		}
 
 	public void firstTurnDeal() {
+		//this should deal the first hand
         if (toDeal.getContainerSize() > 4) {
             playerHand.addCardToContainer(toDeal.drawFromContainer(), true);
             dealerHand.addCardToContainer(toDeal.drawFromContainer(), true);
@@ -100,8 +104,18 @@ public class Blackjack<cardcontainer> {
             stateOfPlay = "Play";
         }
     }
+	public cardContainer getDealerHand() {
+		//returns dealer's hand
+		return dealerHand;
+	}
+	
+	public cardContainer getPlayersHand() {
+		//returns the player's hand as a container, for getting thier card data
+		return playerHand;
+	}
 
     public void hitMe() {
+    	//this is for the player who wants another card
         if (toDeal.getContainerSize() > 1) {
         	playerHand.addCardToContainer(toDeal.drawFromContainer(), true);
         } else {
@@ -121,11 +135,13 @@ public class Blackjack<cardcontainer> {
     }
 
     public void stand() {
+    	//dealers turn when the player is standing
         stateOfPlay = "Dealer";
         return;
     }
 
     public String getGameStateAsString() {
+    	//this returns who has what cards as a string.
         String toReturn = "";
         ArrayList<card> currentDealCardList = new ArrayList<card>();
         for (int i = 0; i < dealerHand.getContainerSize(); i++) {
@@ -147,10 +163,12 @@ public class Blackjack<cardcontainer> {
         return toReturn;
     }
  public void setState(String toSet) {
+	 //this is to reset for use by the playhandler classes
 	 stateOfPlay = toSet;
 	 return;
  }
  public card dealerTurn2() {
+	 //this is where the dealers hand is resolved, after a few cycles through this thing. this should spit out how and if the player/dealer wins.
 	 if (this.checkDealerHand() < 17) {
 		 card tempCard = toDeal.drawFromContainer();
 		 
@@ -179,7 +197,7 @@ public class Blackjack<cardcontainer> {
  }
     
     public void dealerTurn() {
-        //TODO: this is where the dealer turn is resolved
+        //TODO: this is where the dealer turn is started, flipping the face down card and setting the state for the rest of the turn
     	//printout for the dealers initial hand
     	card temp5 = dealerHand.getCardFromIndex(1);
     	System.out.println("the dealer flips his card, revealing a " + temp5.getCardValNameString());
@@ -188,6 +206,7 @@ public class Blackjack<cardcontainer> {
     }
 
     private int checkDealerHand() {
+    	//this is to get the total number of the dealer's hand
         LinkedList<card> toExamine = dealerHand.getCards();
         ArrayList<Integer> dealerHandValList = new ArrayList<Integer>();
         for (card tempCard : toExamine) {
@@ -213,6 +232,7 @@ public class Blackjack<cardcontainer> {
     }
 
     private int checkPlayerHand() {
+    	//this is to get the total number of the player's hand
         LinkedList<card> toExamine = playerHand.getCards();
         ArrayList<Integer> playerHandValList = new ArrayList<Integer>();
         for (card tempCard : toExamine) {
