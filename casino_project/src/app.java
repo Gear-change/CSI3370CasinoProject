@@ -69,10 +69,6 @@ public class app {
                 		case "Dealer":
                 			thisGameBlackjack.dealerTurn();
                 			break;
-                		case "busted":
-                			thisGameBlackjack.DiscardAll();
-                			System.out.println("you have busted, you lose.");
-                			break;
                 		
                 	}
                 	printMultiString(thisGameBlackjack.getGameStateAsString());
@@ -96,14 +92,19 @@ public class app {
                 	case "Dealer Busted":
                 		temp6 = "You won, the Dealer went bust!";
                 		break;
+                	case "playerbusted":
+                		temp6 = "You lose, you have gone bust!";
+                		break;
                 	default:
                 		temp6 = "error, if you see this, blame justin";
+                		break;
                 	}
-                System.out.println(temp6);
-                System.out.println("do you wanna play again? 1 for yes, 0 for no:");
-    			Integer temp1 = 2;
-    			while(temp1 > 1 || temp1 < 0)
-    			try {
+                	thisGameBlackjack.setState("Start");
+                	System.out.println(temp6);
+                	System.out.println("do you wanna play again? 1 for yes, 0 for no:");
+                	Integer temp1 = 2;
+                	while(temp1 > 1 || temp1 < 0)
+                		try {
 					temp1 = consoleScnr.nextInt();
 					System.out.println("come again");
 				} catch (Exception e) {

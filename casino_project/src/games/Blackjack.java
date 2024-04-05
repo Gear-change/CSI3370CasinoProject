@@ -71,7 +71,6 @@ public class Blackjack<cardcontainer> {
 		}
 		playerHand.clearContainer();
 		dealerHand.clearContainer();
-		stateOfPlay = "Start";
 		}
 
 	public void firstTurnDeal() {
@@ -126,7 +125,7 @@ public class Blackjack<cardcontainer> {
         int playerTotal = this.checkPlayerHand();
         if (playerTotal > 21) {
             // player has busted
-            stateOfPlay = "busted";
+            stateOfPlay = "playerbusted";
             System.out.println("you went bust.");
             gameEnded = true;
         } else {
@@ -214,10 +213,15 @@ public class Blackjack<cardcontainer> {
         }
         int totalDealerHand = 0;
         // special rules, first drop the face cards to 11
-        for (Integer integer : dealerHandValList) {
+        int tempInt = 0;
+        ArrayList<Integer> templist = dealerHandValList;
+        for (Integer integer : templist) {
             if (integer >= 11) {
                 integer = 10;
+                dealerHandValList.remove(tempInt);
+                dealerHandValList.add(tempInt, integer);
             }
+            tempInt++;
             totalDealerHand = totalDealerHand + integer;
         }
         // check for aces if the new total is not above 11
@@ -240,10 +244,15 @@ public class Blackjack<cardcontainer> {
         }
         int totalPlayerHand = 0;
         // special rules, first drop the face cards to 11
-        for (Integer integer : playerHandValList) {
+        int tempInt = 0;
+        ArrayList<Integer> templist = playerHandValList;
+        for (Integer integer : templist) {
             if (integer >= 11) {
                 integer = 10;
+                playerHandValList.remove(tempInt);
+                playerHandValList.add(tempInt, integer);
             }
+            tempInt++;
             totalPlayerHand = totalPlayerHand + integer;
         }
         // check for aces if the new total is not above 11
