@@ -216,7 +216,7 @@ public class Blackjack<cardcontainer> {
         // special rules, first drop the face cards to 11
         for (Integer integer : dealerHandValList) {
             if (integer >= 11) {
-                integer = 11;
+                integer = 10;
             }
             totalDealerHand = totalDealerHand + integer;
         }
@@ -242,7 +242,7 @@ public class Blackjack<cardcontainer> {
         // special rules, first drop the face cards to 11
         for (Integer integer : playerHandValList) {
             if (integer >= 11) {
-                integer = 11;
+                integer = 10;
             }
             totalPlayerHand = totalPlayerHand + integer;
         }

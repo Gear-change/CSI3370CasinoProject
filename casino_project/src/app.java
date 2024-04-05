@@ -96,6 +96,8 @@ public class app {
                 	case "Dealer Busted":
                 		temp6 = "You won, the Dealer went bust!";
                 		break;
+                	default:
+                		temp6 = "error, if you see this, blame justin";
                 	}
                 System.out.println(temp6);
                 System.out.println("do you wanna play again? 1 for yes, 0 for no:");
